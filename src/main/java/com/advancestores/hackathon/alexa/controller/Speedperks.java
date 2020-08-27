@@ -15,7 +15,9 @@ public class Speedperks {
     SpeedPerkService speedPerkService;
 
     @GetMapping("/speedperks/{id}")
-    public ResponseEntity<CouponDetails> getSpeedPerkDetails(){
+    public ResponseEntity<CouponDetails> getSpeedPerkDetails() {
+        System.out.println("getSpeedPerkDetails called");
+
         CouponDetails couponDetails = speedPerkService.getCoupons();
         return new ResponseEntity<CouponDetails>(couponDetails, HttpStatus.OK);
     }
