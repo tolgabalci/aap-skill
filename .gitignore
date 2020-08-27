@@ -1,0 +1,18 @@
+# eclipse directories
+.metadata
+RemoteSystemsTempFiles
+.idea
+target
+*.iml
+.settings/
+/.project
+/.classpath
+/.mvn/
+/.aws-sam
+bin/*
+.terraform
+*.tfstate
+*.backup
+tfplan
+.DS_Store
+src/site/markdown/README.md

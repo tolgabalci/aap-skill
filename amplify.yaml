@@ -1,0 +1,12 @@
+postmanFunctionalTests:
+# TODO: Enable when Postman tests are ready to be executed as part of build pipeline
+  enabled: false
+  deployEnvironments:
+    dev:
+# TODO: Add Postman collection and environment UID.
+      collection:
+      environment:
+    qa:
+# TODO: Add Postman collection and environment UID.
+      collection:
+      environment:

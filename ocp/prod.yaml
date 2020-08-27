@@ -1,0 +1,96 @@
+replicaCount: 2
+
+route:
+  enabled: true
+
+deployment:
+  strategy: Rolling
+   rollingParams:
+     maxUnavailable: "0"
+     maxSurge: "50%"
+
+containerEnv:
+  - name: LOG_LEVEL
+    value: "INFO"
+  - name: LOG_APPENDER
+    value: "JSON_STDOUT"
+  - name: ENABLE_NEWRELIC
+    value: "true"
+  - name: NEWRELIC_APPNAME
+    value: "merch-catalog-alexa-order-service"
+  - name: NEWRELIC_INSIGHTS_INSERT_KEY
+    valueFrom:
+      secretKeyRef:
+        key: INSIGHTS_INSERT_KEY
+        name: merch-catalog-hackathon-new-relic-license
+  - name: NEWRELIC_LICENSE
+    valueFrom:
+      secretKeyRef:
+        key: LICENSE
+        name: merch-catalog-hackathon-new-relic-license
+  - name: SPRING_DATASOURCE_CONNECTION_STR
+    valueFrom:
+      secretKeyRef:
+        key: SPRING_DATASOURCE_CONNECTION_STR
+        name: merch-catalog-hackathon-alexa-order-db
+  - name: DATASOURCE_USERNAME
+    valueFrom:
+      secretKeyRef:
+        key: DATASOURCE_USERNAME
+        name: merch-catalog-hackathon-alexa-order-db
+  - name: DATASOURCE_PWD
+    valueFrom:
+      secretKeyRef:
+        key: DATASOURCE_PWD
+        name: merch-catalog-hackathon-alexa-order-db
+  - name: DEFAULT_SCHEMA
+    valueFrom:
+      secretKeyRef:
+        key: DEFAULT_SCHEMA
+        name: merch-catalog-hackathon-alexa-order-db
+  - name: KAFKA_BOOTSTRAP_SERVERS
+    valueFrom:
+      secretKeyRef:
+        key: KAFKA_BOOTSTRAP_SERVERS
+        name: merch-catalog-hackathon-alexa-order-kafka
+  - name: KAFKA_SECURITY_PROTOCOL
+    valueFrom:
+      secretKeyRef:
+        key: KAFKA_SECURITY_PROTOCOL
+        name: merch-catalog-hackathon-alexa-order-kafka
+  - name: KAFKA_SASL_MECHANISM
+    valueFrom:
+      secretKeyRef:
+        key: KAFKA_SASL_MECHANISM
+        name: merch-catalog-hackathon-alexa-order-kafka
+  - name: KAFKA_SASL_JAAS_CONFIG
+    valueFrom:
+      secretKeyRef:
+        key: KAFKA_SASL_JAAS_CONFIG
+        name: merch-catalog-hackathon-alexa-order-kafka
+  - name: KAFKA_SCHEMA_REGISTRY_URL
+    valueFrom:
+      secretKeyRef:
+        key: KAFKA_SCHEMA_REGISTRY_URL
+        name: merch-catalog-hackathon-alexa-order-kafka
+  - name: KAFKA_SCHEMA_REGISTRY_BASIC_AUTH_SOURCE
+    value: "USER_INFO"
+  - name: KAFKA_SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO
+    valueFrom:
+      secretKeyRef:
+        key: KAFKA_SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO
+        name: merch-catalog-hackathon-alexa-order-kafka
+  - name: GC_MAX_METASPACE_SIZE
+    value: "200"
+  - name: GC_CONTAINER_OPTIONS
+    value: "-XX:+UseG1GC"
+  - name: JAVA_OPTS_APPEND
+    value: "-Dspring.datasource.url=$(SPRING_DATASOURCE_CONNECTION_STR) -Dspring.datasource.user-name=$(DATASOURCE_USERNAME) -Dspring.datasource.password=$(DATASOURCE_PWD) -Dspring.profiles.active=postgres,actuators,kafka -Dspring.jpa.properties.hibernate.default_schema=$(DEFAULT_SCHEMA) -Dmanagement.endpoints.web.exposure.include=* -Dmanagement.endpoints.web.exposure.exclude=env,beans,heapdump,threaddump,refresh,features,mappings,archaius"
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 500Mi
+  requests:
+    cpu: 100m
+    memory: 200Mi

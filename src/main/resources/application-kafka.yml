@@ -1,0 +1,45 @@
+spring:
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:127.0.0.1:29092}
+    properties:
+      request.timeout.ms: 20000
+      transaction.timeout.ms: 30000
+
+      # Secure connection
+      security.protocol: ${KAFKA_SECURITY_PROTOCOL:PLAINTEXT}
+      sasl.mechanism: ${KAFKA_SASL_MECHANISM}
+      sasl.jaas.config: ${KAFKA_SASL_JAAS_CONFIG}
+
+      # Schema registry
+      schema.registry.url: ${KAFKA_SCHEMA_REGISTRY_URL:http://127.0.0.1:8081}
+      basic.auth.credentials.source: ${KAFKA_SCHEMA_REGISTRY_BASIC_AUTH_SOURCE:URL}
+      schema.registry.basic.auth.user.info: ${KAFKA_SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO}
+      auto.register.schemas: false
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+      acks: all
+      properties:
+        interceptor.classes: com.advancestores.alexa.order.integration.kafka.interceptor.ProductProducerInterceptor
+    consumer:
+      group-id: hackathon-consumer
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+      properties:
+        specific.avro.reader: true
+        interceptor.classes: com.advancestores.alexa.order.integration.kafka.interceptor.ProductConsumerInterceptor
+    listener:
+      missing-topics-fatal: false
+      concurrency: 2
+      ack-mode: batch
+      log-container-config: true
+
+# TODO: Rename topic based on AAP naming convention
+kafka:
+  topics:
+    product:
+      name: occ-hackathon
+      concurrency: 2
+      group: hackathon-consumer
