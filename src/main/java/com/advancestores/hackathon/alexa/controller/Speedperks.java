@@ -10,6 +10,6 @@ public class Speedperks {
 
     @GetMapping("/speedperks")
     public ResponseEntity<String> getSpeedPerkDetails(){
-        return new ResponseEntity<String>("todo speedperks", HttpStatus.OK);
+        return new ResponseEntity<String>("todo speedperks", HttpStatus.OK);        
     }
 }
