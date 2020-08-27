@@ -7,7 +7,6 @@ target
 .settings/
 /.project
 /.classpath
-/.mvn/
 /.aws-sam
 bin/*
 .terraform
