@@ -1,3 +1,0 @@
-# Remove this file if service is not required to run parallely in Jboss EAP
-FROM daggerok/jboss-eap-6.4:6.4.9-alpine
-COPY --chown=jboss ./target/alexa-order.war ${JBOSS_HOME}/standalone/deployments/alexa-order.war

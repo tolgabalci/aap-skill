@@ -1,17 +1,33 @@
-# eclipse directories
-.metadata
-RemoteSystemsTempFiles
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
 .idea
-target
+*.iws
 *.iml
-.settings/
-/.project
-/.classpath
-/.aws-sam
-bin/*
-.terraform
-*.tfstate
-*.backup
-tfplan
-.DS_Store
-src/site/markdown/README.md
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/

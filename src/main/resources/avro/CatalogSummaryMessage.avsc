@@ -1,7 +1,0 @@
-{"namespace": "com.advancestores.alexa.order.domain",
- "type": "record",
- "name": "CatalogSummaryMessage",
- "fields": [
-     {"name": "summary", "type": "string"}
- ]
-}
