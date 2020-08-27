@@ -1,5 +1,6 @@
 # Start with a base image containing Java runtime
-FROM openjdk:8-jdk-alpine
+# FROM openjdk:11-jdk-alpine
+FROM openjdk:11-jdk
 
 # Add Maintainer Info
 LABEL maintainer="sandeep.kandala@advance-auto.com"
