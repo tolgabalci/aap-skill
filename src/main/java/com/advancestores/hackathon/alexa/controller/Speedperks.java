@@ -5,12 +5,15 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.advancestores.hackathon.alexa.model.SpeedPerkDetails;
 import com.advancestores.hackathon.alexa.service.SpeedPerkService;
 
 import lombok.extern.log4j.Log4j2;
@@ -29,9 +32,17 @@ public class Speedperks {
         return speedPerkService.getCoupons(accountNumber);
     }
     
-    @GetMapping("/members/{phone}")
-    public ResponseEntity<String> getMembersByPhone(@PathVariable String phone){
+    @GetMapping("/members")
+    public ResponseEntity<String> getMembers(@RequestParam(name="phone") String phone, 
+    		@RequestParam(name="accountNumber") String accountNumber){
     	log.info("Get members by phone number ->" + phone);
-    	return speedPerkService.getMembersByPhone(phone);
+    	return speedPerkService.getMembers(phone, accountNumber);
+    }
+    
+    @GetMapping("/GetSpeedPerks")
+    public ResponseEntity<SpeedPerkDetails> getSpeedPerksByUser(@RequestParam(name="userId") String userId){
+    	log.info("Get Speed Perks By User Id->" + userId);
+    	SpeedPerkDetails details = speedPerkService.getSpeedPerksByUser(userId);
+    	return new ResponseEntity<SpeedPerkDetails>(details, HttpStatus.OK);
     }
 }
