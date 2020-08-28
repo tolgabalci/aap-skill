@@ -7,11 +7,7 @@ import java.security.NoSuchAlgorithmException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.advancestores.hackathon.alexa.model.AapDBRepository;
 import com.advancestores.hackathon.alexa.model.AlexaUser;
@@ -55,6 +51,15 @@ public class Speedperks {
         return response;
     }
 
+    @PostMapping(path = "/user",consumes = "application/json",produces = "application/json")
+    public ResponseEntity<SpeedPerkDetails> getSpeedPerksByUser(@RequestBody AlexaUser alexaUser) {
+        SpeedPerkDetails details = speedPerkService.getSpeedPerksByUser(alexaUser);
+        ResponseEntity<SpeedPerkDetails> response = details != null
+                ? new ResponseEntity<SpeedPerkDetails>(details, HttpStatus.OK)
+                : new ResponseEntity<SpeedPerkDetails>(details, HttpStatus.NOT_FOUND);
+        return response;
+    }
+
     @GetMapping(value = "foo/{alexaUserId}")
     public ResponseEntity<AlexaUser> getFooByAlexaUserId(@PathVariable final String alexaUserId) {
         // final AlexaUser alexaUser = new AlexaUser();
@@ -83,4 +88,5 @@ public class Speedperks {
 
         return new ResponseEntity<String>("Added AlexaUser record " + alexaUser.getId(), HttpStatus.NOT_FOUND);
     }
+
 }

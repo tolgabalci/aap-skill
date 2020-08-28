@@ -147,4 +147,60 @@ public class SpeedPerkService {
         }
 		return details;
 	}
+
+	public SpeedPerkDetails getSpeedPerksByUser(AlexaUser alexaUser) {
+		SpeedPerkDetails details = null;
+		//log.info("found user with phone number: " + user.getSpeedPerksPhone());
+
+		//Retrieve the phone number from DB by userId
+		String phone = alexaUser.getSpeedPerksPhone();
+		ResponseEntity<String> response = getMembers(phone, null);
+		JsonObject jsonObject = new JsonParser().parse(response.getBody()).getAsJsonObject();
+		details = new SpeedPerkDetails();
+		JsonArray arr = jsonObject.getAsJsonArray("SearchMemberResult");
+		JsonObject searchMember = arr.get(0).getAsJsonObject();
+		details.setName(searchMember.get("firstName").getAsString() + " " + searchMember.get("lastName").getAsString());
+
+		String accounNumber = searchMember.get("accountNumber").getAsString();
+		alexaUser.setSpeedPerksMemberId(accounNumber);
+		saveAlexaUserRecord(alexaUser);
+		ResponseEntity<String> responseByAccount = getMemberByAccount(accounNumber);
+		JsonObject jsonObject1 = new JsonParser().parse(responseByAccount.getBody()).getAsJsonObject().getAsJsonObject("MemberFullProfile");
+		JsonObject tier = jsonObject1.getAsJsonObject("tier");
+		details.setCurrentLevel(tier.get("name").getAsString());
+		JsonObject pointSummary = jsonObject1.getAsJsonObject("pointSummary");
+		JsonArray points = pointSummary.getAsJsonArray("points");
+		if (points != null && points.size() > 0) {
+			details.setCurrentPoints(points.get(0).getAsJsonObject().get("pointsAvailable").getAsBigDecimal());
+		}
+
+		JsonArray customAttributes = jsonObject1.getAsJsonArray("customAttributes");
+		if (customAttributes != null && customAttributes.size() > 0) {
+			for (int i = 0; i < customAttributes.size(); i++) {
+				if (customAttributes.get(0).getAsJsonObject().get("key").getAsString().equalsIgnoreCase("pointsToNextReward")) {
+					details.setPointsToNextReward(customAttributes.get(0).getAsJsonObject().get("param").getAsString());
+					break;
+				}
+			}
+		}
+
+
+		ResponseEntity<String> couponResponse = getCoupons(accounNumber);
+		JsonObject couponObject = new JsonParser().parse(couponResponse.getBody()).getAsJsonObject();
+		JsonArray memberCoupons = couponObject.getAsJsonArray("MemberCoupons");
+		details.setTotalCouponsAvailable(memberCoupons.size());
+		BigDecimal totalCouponValue = BigDecimal.ZERO;
+		if (memberCoupons != null && memberCoupons.size() > 0) {
+			for (int i = 0; i < memberCoupons.size(); i++) {
+				totalCouponValue = memberCoupons.get(i).getAsJsonObject().get("couponValue").getAsBigDecimal();
+			}
+			details.setTotalCouponValue(totalCouponValue);
+		}
+		log.info(details);
+		return details;
+	}
+
+	private void saveAlexaUserRecord(AlexaUser alexaUser){
+		aapDBRepository.save(alexaUser);
+	}
 }
