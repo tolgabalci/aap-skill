@@ -21,8 +21,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AapDBRepository extends MongoRepository<AlexaUser, String> {
-    AlexaUser findOne(String id);
-
     AlexaUser findByAlexaUserId(String alexaUserId);
 
 }
