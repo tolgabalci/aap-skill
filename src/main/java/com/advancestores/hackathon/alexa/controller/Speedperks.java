@@ -49,14 +49,17 @@ public class Speedperks {
     public ResponseEntity<SpeedPerkDetails> getSpeedPerksByUser(@RequestParam(name="userId") String userId){
     	log.info("Get Speed Perks By User Id->" + userId);
     	SpeedPerkDetails details = speedPerkService.getSpeedPerksByUser(userId);
-    	return new ResponseEntity<SpeedPerkDetails>(details, HttpStatus.OK);
+    	ResponseEntity<SpeedPerkDetails> response = details != null 
+    			? new ResponseEntity<SpeedPerkDetails>(details, HttpStatus.OK)
+    			: new ResponseEntity<SpeedPerkDetails>(details, HttpStatus.NOT_FOUND);
+    	return response;
     }
  
     @GetMapping(value = "foo/{alexaUserId}")
     public ResponseEntity<AlexaUser> getFooByAlexaUserId(@PathVariable final String alexaUserId) {
         //final AlexaUser alexaUser = new AlexaUser();
         // alexaUser.setAlexaUserId(alexaUserId);
-        // alexaUser.setSpeedPerksMemberId("SomeId12345");
+        // alexaUser.setSpeedPerksMemberId("SomeId12345"); 
         // alexaUser.setSpeedPerksPhone("540-555-1212");
         // aapDBRepository.save(alexaUser);
 

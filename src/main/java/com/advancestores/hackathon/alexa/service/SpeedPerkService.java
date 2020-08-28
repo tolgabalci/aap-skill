@@ -13,6 +13,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -20,6 +21,8 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.advancestores.hackathon.alexa.model.AapDBRepository;
+import com.advancestores.hackathon.alexa.model.AlexaUser;
 import com.advancestores.hackathon.alexa.model.CouponDetails;
 import com.advancestores.hackathon.alexa.model.SpeedPerkDetails;
 import com.google.gson.JsonArray;
@@ -34,6 +37,9 @@ public class SpeedPerkService {
 
     @Autowired
     private RestTemplate restTemplate;
+    
+    @Autowired
+    AapDBRepository aapDBRepository;
     
     @Autowired
     private Environment env;
@@ -88,12 +94,17 @@ public class SpeedPerkService {
 	
 	
 
-	public SpeedPerkDetails getSpeedPerksByUser(String userId) {
+	public SpeedPerkDetails getSpeedPerksByUser(String alexaUserId) {
+		SpeedPerkDetails details = null;
+		final AlexaUser user = aapDBRepository.findByAlexaUserId(alexaUserId);
+        if (user != null) {
+            log.info("found user with phone number: " + user.getSpeedPerksPhone());            
+        
 		//Retrieve the phone number from DB by userId 
-		String phone = "9194538872";
+		String phone = user.getSpeedPerksPhone();
 		ResponseEntity<String> response = getMembers(phone, null);
 		JsonObject jsonObject = new JsonParser().parse(response.getBody()).getAsJsonObject();
-		SpeedPerkDetails details = new SpeedPerkDetails();
+		details = new SpeedPerkDetails();
 		JsonArray arr = jsonObject.getAsJsonArray("SearchMemberResult");
 		JsonObject searchMember = arr.get(0).getAsJsonObject();
 		details.setName(searchMember.get("firstName").getAsString() + " " + searchMember.get("lastName").getAsString());
@@ -124,7 +135,7 @@ public class SpeedPerkService {
 		}
 		details.setTotalCouponValue(totalCouponValue);
 		log.info(details);
-
+        }
 		return details;
 	}
 }
