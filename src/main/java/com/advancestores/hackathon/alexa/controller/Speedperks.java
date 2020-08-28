@@ -5,12 +5,15 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.advancestores.hackathon.alexa.model.AapDBRepository;
+import com.advancestores.hackathon.alexa.model.AlexaUser;
 import com.advancestores.hackathon.alexa.service.SpeedPerkService;
 
 import lombok.extern.log4j.Log4j2;
@@ -30,8 +33,19 @@ public class Speedperks {
     }
     
     @GetMapping("/members/{phone}")
-    public ResponseEntity<String> getMembersByPhone(@PathVariable String phone){
-    	log.info("Get members by phone number ->" + phone);
-    	return speedPerkService.getMembersByPhone(phone);
+    public ResponseEntity<String> getMembersByPhone(@PathVariable String phone) {
+        log.info("Get members by phone number ->" + phone);
+        return speedPerkService.getMembersByPhone(phone);
     }
+    
+    @GetMapping("/foo")
+    public String getFoo() {
+        AlexaUser user = new AlexaUser();
+        user.setAlexaUserId("Alexa1234");
+        aapDBRepository.findAlexaUserBySpeedPerksPhone("Alexa1234");
+        
+
+        return "boo";
+    }
+
 }
