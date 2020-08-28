@@ -24,26 +24,36 @@ import lombok.extern.log4j.Log4j2;
 public class Speedperks {
 
     @Autowired
+    AapDBRepository aapDBRepository;
+
+    @Autowired
     SpeedPerkService speedPerkService;
 
     @GetMapping("/coupons/{accountNumber}")
-    public ResponseEntity<String> getSpeedPerkDetails(@PathVariable String accountNumber) throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
-    	log.info("Get Coupons for accountNumber ->"+accountNumber);
+    public ResponseEntity<String> getSpeedPerkDetails(@PathVariable final String accountNumber)
+            throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
+        log.info("Get Coupons for accountNumber ->" + accountNumber);
         return speedPerkService.getCoupons(accountNumber);
     }
-    
+
     @GetMapping("/members/{phone}")
-    public ResponseEntity<String> getMembersByPhone(@PathVariable String phone) {
+    public ResponseEntity<String> getMembersByPhone(@PathVariable final String phone) {
         log.info("Get members by phone number ->" + phone);
         return speedPerkService.getMembersByPhone(phone);
     }
-    
-    @GetMapping("/foo")
-    public String getFoo() {
-        AlexaUser user = new AlexaUser();
-        user.setAlexaUserId("Alexa1234");
-        aapDBRepository.findAlexaUserBySpeedPerksPhone("Alexa1234");
-        
+
+    @GetMapping(value = "foo/{userId}")
+    public String getFooByAlexaUserId(@PathVariable final String alexaUserId) {
+        final AlexaUser alexaUser = new AlexaUser();
+        alexaUser.setAlexaUserId(alexaUserId);
+        alexaUser.setSpeedPerksMemberId("SomeId12345");
+        alexaUser.setSpeedPerksPhone("540-555-1212");
+        aapDBRepository.save(alexaUser);
+
+        final AlexaUser user = aapDBRepository.findByAlexaUserId(alexaUserId);
+        if (user != null) {
+            log.info("found user with phone number: " + user.getSpeedPerksPhone());
+        }
 
         return "boo";
     }
