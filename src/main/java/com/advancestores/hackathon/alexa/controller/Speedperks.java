@@ -44,11 +44,11 @@ public class Speedperks {
 
     @GetMapping(value = "foo/{alexaUserId}")
     public String getFooByAlexaUserId(@PathVariable final String alexaUserId) {
-        final AlexaUser alexaUser = new AlexaUser();
-        alexaUser.setAlexaUserId(alexaUserId);
-        alexaUser.setSpeedPerksMemberId("SomeId12345");
-        alexaUser.setSpeedPerksPhone("540-555-1212");
-        aapDBRepository.save(alexaUser);
+        //final AlexaUser alexaUser = new AlexaUser();
+        // alexaUser.setAlexaUserId(alexaUserId);
+        // alexaUser.setSpeedPerksMemberId("SomeId12345");
+        // alexaUser.setSpeedPerksPhone("540-555-1212");
+        // aapDBRepository.save(alexaUser);
 
         final AlexaUser user = aapDBRepository.findByAlexaUserId(alexaUserId);
         if (user != null) {
