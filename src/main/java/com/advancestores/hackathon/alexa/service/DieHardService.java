@@ -26,6 +26,7 @@ public class DieHardService {
     	Random randomNum = new Random();
     	int discount = 125 + randomNum.nextInt(200);
     	return  (batteryDetails != null && batteryDetails.size() > 0) ? batteryDetails.get(0) : 
-        	dieHardDBRepository.save(new BatteryDetails(new Date().toString(), make, model, year, "I found a DieHard GOLD Battery on sale for $"+discount+" near you."));
+        	dieHardDBRepository.save(new BatteryDetails(new Date().toString(), make, model, year, 
+        			"I found a DieHard GOLD Battery on sale for $"+discount+" near you. Would you like to hear the locations?"));
     }
 }
