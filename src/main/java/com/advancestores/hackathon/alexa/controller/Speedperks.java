@@ -42,7 +42,7 @@ public class Speedperks {
         return speedPerkService.getMembersByPhone(phone);
     }
 
-    @GetMapping(value = "foo/{userId}")
+    @GetMapping(value = "foo/{alexaUserId}")
     public String getFooByAlexaUserId(@PathVariable final String alexaUserId) {
         final AlexaUser alexaUser = new AlexaUser();
         alexaUser.setAlexaUserId(alexaUserId);
