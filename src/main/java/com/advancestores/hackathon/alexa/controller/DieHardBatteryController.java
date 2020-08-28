@@ -4,11 +4,14 @@ import com.advancestores.hackathon.alexa.model.BatteryDetails;
 
 import com.advancestores.hackathon.alexa.model.DieHardDBRepository;
 import com.advancestores.hackathon.alexa.service.DieHardService;
+
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/diehard")
+@Log4j2
 public class DieHardBatteryController {
 
     @Autowired
@@ -18,7 +21,7 @@ public class DieHardBatteryController {
 
     @GetMapping("/{make}/{model}/{year}")
     public BatteryDetails getDieHardBatteriesByMakeModelYear(@PathVariable(name = "make") String make, @PathVariable(name = "make") String model, @PathVariable(name = "make") String year){
-
+        log.info(make+model+year);
         return dieHardService.findDieHardBatteries(make+model+year);
     }
 
