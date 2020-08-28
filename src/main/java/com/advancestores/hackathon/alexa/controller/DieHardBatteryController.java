@@ -20,7 +20,7 @@ public class DieHardBatteryController {
     DieHardDBRepository dieHardDBRepository;
 
     @GetMapping("/{make}/{model}/{year}")
-    public BatteryDetails getDieHardBatteriesByMakeModelYear(@PathVariable(name = "make") String make, @PathVariable(name = "make") String model, @PathVariable(name = "make") String year){
+    public BatteryDetails getDieHardBatteriesByMakeModelYear(@PathVariable(name = "make") String make, @PathVariable(name = "model") String model, @PathVariable(name = "year") String year){
         log.info(make+model+year);
         return dieHardService.findDieHardBatteries(make+model+year);
     }
