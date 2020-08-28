@@ -116,24 +116,33 @@ public class SpeedPerkService {
 		details.setCurrentLevel(tier.get("name").getAsString());
 		JsonObject pointSummary = jsonObject1.getAsJsonObject("pointSummary");
 		JsonArray points = pointSummary.getAsJsonArray("points");
-		details.setCurrentPoints(points.get(0).getAsJsonObject().get("pointsAvailable").getAsBigDecimal()); 
+		if(points!= null && points.size() > 0 ) {
+			details.setCurrentPoints(points.get(0).getAsJsonObject().get("pointsAvailable").getAsBigDecimal()); 
+		}
+		
 		JsonArray customAttributes = jsonObject1.getAsJsonArray("customAttributes");
-		for(int i = 0; i< customAttributes.size(); i++ ) {
-			if(customAttributes.get(0).getAsJsonObject().get("key").getAsString().equalsIgnoreCase("pointsToNextReward")) {
-				details.setPointsToNextReward(customAttributes.get(0).getAsJsonObject().get("param").getAsString());
-				break;
+		if(customAttributes != null && customAttributes.size() > 0) {
+			for(int i = 0; i< customAttributes.size(); i++ ) {
+				if(customAttributes.get(0).getAsJsonObject().get("key").getAsString().equalsIgnoreCase("pointsToNextReward")) {
+					details.setPointsToNextReward(customAttributes.get(0).getAsJsonObject().get("param").getAsString());
+					break;
+				}
 			}
 		}
+		
 		
 		ResponseEntity<String> couponResponse = getCoupons(accounNumber);
 		JsonObject couponObject = new JsonParser().parse(couponResponse.getBody()).getAsJsonObject();
 		JsonArray memberCoupons = couponObject.getAsJsonArray("MemberCoupons");
 		details.setTotalCouponsAvailable(memberCoupons.size());
 		BigDecimal totalCouponValue = BigDecimal.ZERO;
-		for(int i = 0; i<memberCoupons.size(); i++) {
-			totalCouponValue = memberCoupons.get(i).getAsJsonObject().get("couponValue").getAsBigDecimal();
+		if(memberCoupons != null && memberCoupons.size()>0) {
+			for(int i = 0; i<memberCoupons.size(); i++) {
+				totalCouponValue = memberCoupons.get(i).getAsJsonObject().get("couponValue").getAsBigDecimal();
+			}
+			details.setTotalCouponValue(totalCouponValue);
 		}
-		details.setTotalCouponValue(totalCouponValue);
+		
 		log.info(details);
         }
 		return details;
