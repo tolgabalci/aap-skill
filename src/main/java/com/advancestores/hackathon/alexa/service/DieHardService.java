@@ -24,8 +24,8 @@ public class DieHardService {
     public BatteryDetails findDieHardBatteries(String make, String model, String year){
     	List<BatteryDetails> batteryDetails = dieHardDBRepository.findByMakeIdAndModelIdAndYearId(make, model, year);
     	Random randomNum = new Random();
-    	int discount = 5 + randomNum.nextInt(50);
+    	int discount = 125 + randomNum.nextInt(200);
     	return  (batteryDetails != null && batteryDetails.size() > 0) ? batteryDetails.get(0) : 
-        	dieHardDBRepository.save(new BatteryDetails(new Date().toString(), make, model, year, "You have " +discount + " dollors discount on diehard battery"));
+        	dieHardDBRepository.save(new BatteryDetails(new Date().toString(), make, model, year, "I found a DieHard GOLD Battery on sale for $"+discount+" near you."));
     }
 }
