@@ -2,7 +2,9 @@
 
 package com.advancestores.hackathon.alexa.service;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +23,9 @@ public class DieHardService {
 
     public BatteryDetails findDieHardBatteries(String make, String model, String year){
     	List<BatteryDetails> batteryDetails = dieHardDBRepository.findByMakeIdAndModelIdAndYearId(make, model, year);
-    	log.info("BatteryDetails response ->" +batteryDetails);
-        return  (batteryDetails != null && batteryDetails.size() > 0) ? batteryDetails.get(0) : null;
+    	Random randomNum = new Random();
+    	int discount = 5 + randomNum.nextInt(50);
+    	return  (batteryDetails != null && batteryDetails.size() > 0) ? batteryDetails.get(0) : 
+        	dieHardDBRepository.save(new BatteryDetails(new Date().toString(), make, model, year, "You have " +discount + " dollors discount on diehard battery"));
     }
 }

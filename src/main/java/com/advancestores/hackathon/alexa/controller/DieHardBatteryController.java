@@ -11,6 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
+import java.util.List;
+
 @RestController
 @RequestMapping("/diehard")
 @Log4j2
@@ -27,8 +30,9 @@ public class DieHardBatteryController {
       
     	log.info("Vehicle make ->" + make + ", Model ->" + model + " and Year ->"+ year);
     	BatteryDetails batteryDetails = dieHardService.findDieHardBatteries(make, model, year);
-        return batteryDetails != null ? new ResponseEntity<BatteryDetails>(batteryDetails, HttpStatus.OK)
-        		: new ResponseEntity<BatteryDetails>(batteryDetails, HttpStatus.NOT_FOUND);
+    	
+        return new ResponseEntity<BatteryDetails>(batteryDetails, HttpStatus.OK);
+
     }
 
     @PostMapping
