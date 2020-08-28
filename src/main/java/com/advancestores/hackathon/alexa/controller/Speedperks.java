@@ -1,11 +1,13 @@
 package com.advancestores.hackathon.alexa.controller;
 
+import java.nio.file.Path;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,7 +45,7 @@ public class Speedperks {
     }
 
     @GetMapping(value = "foo/{alexaUserId}")
-    public String getFooByAlexaUserId(@PathVariable final String alexaUserId) {
+    public ResponseEntity<AlexaUser> getFooByAlexaUserId(@PathVariable final String alexaUserId) {
         //final AlexaUser alexaUser = new AlexaUser();
         // alexaUser.setAlexaUserId(alexaUserId);
         // alexaUser.setSpeedPerksMemberId("SomeId12345");
@@ -52,10 +54,12 @@ public class Speedperks {
 
         final AlexaUser user = aapDBRepository.findByAlexaUserId(alexaUserId);
         if (user != null) {
-            log.info("found user with phone number: " + user.getSpeedPerksPhone());
+            log.info("found user with phone number: " + user.getSpeedPerksPhone());            
+            return new ResponseEntity<AlexaUser>(user, HttpStatus.OK);
         }
-
-        return "boo";
+        else{
+            return new ResponseEntity<AlexaUser>(user, HttpStatus.NOT_FOUND);
+        }        
     }
 
 }
