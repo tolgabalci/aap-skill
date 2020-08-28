@@ -1,16 +1,21 @@
 package com.advancestores.hackathon.alexa.controller;
 
+import java.nio.file.Path;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.advancestores.hackathon.alexa.model.AapDBRepository;
+import com.advancestores.hackathon.alexa.model.AlexaUser;
 import com.advancestores.hackathon.alexa.service.SpeedPerkService;
 
 import lombok.extern.log4j.Log4j2;
@@ -21,17 +26,40 @@ import lombok.extern.log4j.Log4j2;
 public class Speedperks {
 
     @Autowired
+    AapDBRepository aapDBRepository;
+
+    @Autowired
     SpeedPerkService speedPerkService;
 
     @GetMapping("/coupons/{accountNumber}")
-    public ResponseEntity<String> getSpeedPerkDetails(@PathVariable String accountNumber) throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
-    	log.info("Get Coupons for accountNumber ->"+accountNumber);
+    public ResponseEntity<String> getSpeedPerkDetails(@PathVariable final String accountNumber)
+            throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
+        log.info("Get Coupons for accountNumber ->" + accountNumber);
         return speedPerkService.getCoupons(accountNumber);
     }
-    
+
     @GetMapping("/members/{phone}")
-    public ResponseEntity<String> getMembersByPhone(@PathVariable String phone){
-    	log.info("Get members by phone number ->" + phone);
-    	return speedPerkService.getMembersByPhone(phone);
+    public ResponseEntity<String> getMembersByPhone(@PathVariable final String phone) {
+        log.info("Get members by phone number ->" + phone);
+        return speedPerkService.getMembersByPhone(phone);
     }
+
+    @GetMapping(value = "foo/{alexaUserId}")
+    public ResponseEntity<AlexaUser> getFooByAlexaUserId(@PathVariable final String alexaUserId) {
+        //final AlexaUser alexaUser = new AlexaUser();
+        // alexaUser.setAlexaUserId(alexaUserId);
+        // alexaUser.setSpeedPerksMemberId("SomeId12345");
+        // alexaUser.setSpeedPerksPhone("540-555-1212");
+        // aapDBRepository.save(alexaUser);
+
+        final AlexaUser user = aapDBRepository.findByAlexaUserId(alexaUserId);
+        if (user != null) {
+            log.info("found user with phone number: " + user.getSpeedPerksPhone());            
+            return new ResponseEntity<AlexaUser>(user, HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<AlexaUser>(user, HttpStatus.NOT_FOUND);
+        }        
+    }
+
 }
