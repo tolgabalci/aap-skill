@@ -19,7 +19,9 @@ package com.advancestores.hackathon.alexa.model;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface DieHardDBRepository extends MongoRepository<BatteryDetails, String> {
-    BatteryDetails findByMakeId(String makeId);
+    List<BatteryDetails> findByMakeId(String makeId);
 }
